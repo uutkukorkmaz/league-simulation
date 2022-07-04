@@ -117,10 +117,10 @@ class TeamTest extends TestCase
             $team->win * config('league.rules.strength.win')
             + $team->draw * config('league.rules.strength.draw')
             + $team->loss * config('league.rules.strength.loss')
-            + $team->goals_for_away * config('league.rules.strength.goals.for.away')
-            + $team->goals_against_away * config('league.rules.strength.goals.against.away')
-            + $team->goals_for_home * config('league.rules.strength.goals.for.home')
-            + $team->goals_against_home * config('league.rules.strength.goals.against.home')
+            + $team->getGoalsFor('home') * config('league.rules.strength.goals.for.home')
+            + $team->getGoalsAgainst('home') * config('league.rules.strength.goals.against.home')
+            + $team->getGoalsFor('away') * config('league.rules.strength.goals.for.away')
+            + $team->getGoalsAgainst('away') * config('league.rules.strength.goals.against.away')
         );
     }
 
