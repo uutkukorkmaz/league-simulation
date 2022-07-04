@@ -99,4 +99,29 @@ class TeamTest extends TestCase
         );
     }
 
+    /**
+     * @test
+     */
+    public function team_strength_calculated_correctly()
+    {
+        $team = Team::factory()
+            ->withWin(2)
+            ->withDraw(1)
+            ->withLoss(0)
+            ->withGoalsFor(3)
+            ->withGoalsAgainst(1)
+            ->create();
+
+        $this->assertEquals(
+            $team->strength,
+            $team->win * config('league.rules.strength.win')
+            + $team->draw * config('league.rules.strength.draw')
+            + $team->loss * config('league.rules.strength.loss')
+            + $team->goals_for_away * config('league.rules.strength.goals.for.away')
+            + $team->goals_against_away * config('league.rules.strength.goals.against.away')
+            + $team->goals_for_home * config('league.rules.strength.goals.for.home')
+            + $team->goals_against_home * config('league.rules.strength.goals.against.home')
+        );
+    }
+
 }
