@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -34,7 +35,8 @@ class Team extends Model
     protected $appends = [
         'points',
         'goal_diff',
-        'standings',
+        'games',
+        'strength',
     ];
 
     /**
@@ -100,30 +102,43 @@ class Team extends Model
     }
 
     /**
-     * Get the standings.
+     * Get the all games.
+     *
+     * @return Attribute
      */
-    public function standings(): Attribute
+    public function games(): Attribute
     {
-        if (!$this->relationLoaded('homeStandings')) {
-            $this->load('homeStandings');
+        if (!$this->relationLoaded('homeGames')) {
+            $this->load('homeGames');
         }
 
-        if (!$this->relationLoaded('awayStandings')) {
-            $this->load('awayStandings');
+        if (!$this->relationLoaded('awayGames')) {
+            $this->load('awayGames');
         }
 
 
-        return new Attribute(get: fn() => $this->homeStandings->merge($this->awayStandings));
+        return new Attribute(get: fn() => $this->homeGames->merge($this->awayGames));
     }
 
-    public function homeStandings(): HasMany
+    /**
+     * The games that the team has played in.
+     *
+     * @return HasMany
+     */
+    public function homeGames(): HasMany
     {
-        return $this->hasMany(Standing::class, 'home_team_id')->orderBy('week');
+        return $this->hasMany(Game::class, 'home_team_id')->orderBy('week');
     }
 
-    public function awayStandings(): HasMany
+    /**
+     * The games that the team played out.
+     *
+     * @return HasMany
+     */
+
+    public function awayGames(): HasMany
     {
-        return $this->hasMany(Standing::class, 'away_team_id')->orderBy('week');
+        return $this->hasMany(Game::class, 'away_team_id')->orderBy('week');
     }
 
     /**

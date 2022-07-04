@@ -13,7 +13,7 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('standings', function (Blueprint $table) {
+        Schema::create('games', function (Blueprint $table) {
             $table->id();
             $table->integer('week');
             $table->foreignId('home_team_id')->constrained('teams')->cascadeOnDelete();
@@ -32,7 +32,7 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('standings');
+        Schema::dropIfExists('Matchs');
     }
 
 };

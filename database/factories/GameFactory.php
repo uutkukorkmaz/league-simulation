@@ -6,9 +6,9 @@ use App\Models\Team;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Standing>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Game>
  */
-class StandingFactory extends Factory
+class GameFactory extends Factory
 {
 
     /**
@@ -55,12 +55,36 @@ class StandingFactory extends Factory
         ]));
     }
 
+    public function homeGoals(int $count = 1)
+    {
+        return $this->state(fn($attributes) => array_merge($attributes, [
+            'home_goals' => $count,
+        ]));
+    }
+
+
     public function awayWins()
     {
         return $this->state(fn($attributes) => array_merge($attributes, [
             'is_played' => true,
             'home_goals' => $this->faker->numberBetween(0, 1),
             'away_goals' => $this->faker->numberBetween(2, 5),
+        ]));
+    }
+
+    public function awayGoals(int $count = 1)
+    {
+        return $this->state(fn($attributes) => array_merge($attributes, [
+            'away_goals' => $count,
+        ]));
+    }
+
+    public function noGoals()
+    {
+        return $this->state(fn($attributes) => array_merge($attributes, [
+            'is_played' => true,
+            'home_goals' => 0,
+            'away_goals' => 0,
         ]));
     }
 

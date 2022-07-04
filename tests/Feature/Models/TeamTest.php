@@ -4,7 +4,7 @@ namespace Tests\Feature\Models;
 
 use Tests\TestCase;
 use App\Models\Team;
-use App\Models\Standing;
+use App\Models\Game;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TeamTest extends TestCase
@@ -46,47 +46,47 @@ class TeamTest extends TestCase
 
     /**
      * @test
-     * @covers \App\Models\Team::homeStandings
+     * @covers \App\Models\Team::homeGames
      */
-    public function a_team_must_have_a_home_standing()
+    public function a_team_must_have_a_home_Game()
     {
         $team = Team::factory()->create();
-        $standing = Standing::factory()
+        $game = Game::factory()
             ->home($team)
             ->away(Team::factory()->create())
             ->create();
 
-        $this->assertEquals($standing->id, $team->homeStandings()->first()->id);
+        $this->assertEquals($game->id, $team->homeGames()->first()->id);
     }
 
     /**
      * @test
-     * @covers \App\Models\Team::awayStandings
+     * @covers \App\Models\Team::awayGames
      */
-    public function a_team_must_have_an_away_standing()
+    public function a_team_must_have_an_away_Game()
     {
         $team = Team::factory()->create();
-        $standing = Standing::factory()
+        $Game = Game::factory()
             ->home(Team::factory()->create())
             ->away($team)
             ->create();
 
-        $this->assertEquals($standing->id, $team->awayStandings()->first()->id);
+        $this->assertEquals($Game->id, $team->awayGames()->first()->id);
     }
 
     /**
      * @test
-     * @covers \App\Models\Team::standings
+     * @covers \App\Models\Team::games
      */
-    public function a_team_should_have_both_side_standing()
+    public function a_team_should_have_both_side_game()
     {
         $team = Team::factory()->create();
 
-        $home = Standing::factory()
+        $home = Game::factory()
             ->home($team)
             ->away(Team::factory()->create())
             ->create();
-        $away = Standing::factory()
+        $away = Game::factory()
             ->away($team)
             ->home(Team::factory()->create())
             ->create();
@@ -94,8 +94,8 @@ class TeamTest extends TestCase
         $this->assertEquals($team->id, $away->away_team_id);
         $this->assertEquals($team->id, $home->home_team_id);
         $this->assertEquals(
-            array_merge($team->homeStandings->toArray(), $team->awayStandings->toArray()),
-            $team->standings->toArray()
+            array_merge($team->homeGames->toArray(), $team->awayGames->toArray()),
+            $team->Games->toArray()
         );
     }
 
@@ -108,7 +108,7 @@ class TeamTest extends TestCase
         $team = Team::factory()
             ->create();
 
-        Standing::factory()
+        Game::factory()
             ->home($team)
             ->homeGoals(3)
             ->awayGoals(2)
@@ -126,7 +126,7 @@ class TeamTest extends TestCase
         $team = Team::factory()
             ->create();
 
-        Standing::factory()
+        Game::factory()
             ->away($team)
             ->homeGoals(2)
             ->awayGoals(3)
@@ -149,10 +149,10 @@ class TeamTest extends TestCase
             ->withGoalsAgainst(1)
             ->create();
 
-        Standing::factory(2)->home($team)->homeWins()->create();
-        Standing::factory(1)->away($team)->awayWins()->create();
-        Standing::factory(1)->home($team)->noGoals()->create();
-        Standing::factory(1)->away($team)->homeWins()->create();
+        Game::factory(2)->home($team)->homeWins()->create();
+        Game::factory(1)->away($team)->awayWins()->create();
+        Game::factory(1)->home($team)->noGoals()->create();
+        Game::factory(1)->away($team)->homeWins()->create();
 
 
         $this->assertEquals(
