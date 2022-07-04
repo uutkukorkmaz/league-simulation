@@ -45,8 +45,43 @@ class Team extends Model
     protected $casts = [
         'goal_diff' => 'integer',
         'points' => 'integer',
+        'strength' => 'float',
     ];
 
+
+    /**
+     * Get the strength point.
+     *
+     * @return Attribute
+     */
+    public function strength(): Attribute
+    {
+        return new Attribute(get: fn() => $this->points
+            + $this->getMultipliedScoreByGoals('home', 'for')
+            + $this->getMultipliedScoreByGoals('home', 'against')
+            + $this->getMultipliedScoreByGoals('away', 'for')
+            + $this->getMultipliedScoreByGoals('away', 'against'));
+    }
+
+    /**
+     * Calculate a portion of the strength based on the number of goals.
+     *
+     * @param  string  $side
+     * @param  string  $type
+     *
+     * @return float
+     */
+    protected function getMultipliedScoreByGoals(string $side, string $type): float
+    {
+        return $this->{Str::camel('goals '.$type)}($side)
+            * config('league.rules.strength.goals.'.$type.'.'.$side);
+    }
+
+    /**
+     * Get the points in league.
+     *
+     * @return Attribute
+     */
     public function points(): Attribute
     {
         return new Attribute(get: fn() => $this->won * config('league.rules.points.win')
@@ -91,5 +126,33 @@ class Team extends Model
         return $this->hasMany(Standing::class, 'away_team_id')->orderBy('week');
     }
 
+    /**
+     * Get the total received goals.
+     *
+     * @param  string  $side
+     *
+     * @return int
+     */
+    public function goalsAgainst(string $side): int
+    {
+        $side = strtolower($side);
+
+        return $this->{$side.'Games'}->sum($side == 'home' ? 'away_goals' : 'home_goals');
+    }
+
+
+    /**
+     * Get the total scored goals.
+     *
+     * @param  string  $side
+     *
+     * @return int
+     */
+    public function goalsFor(string $side): int
+    {
+        $side = strtolower($side);
+
+        return $this->{$side.'Games'}->sum($side.'_goals');
+    }
 
 }
