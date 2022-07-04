@@ -101,26 +101,67 @@ class TeamTest extends TestCase
 
     /**
      * @test
+     * @covers \App\Models\Team::goalsAgainst
+     */
+    public function calculates_goals_against_correctly()
+    {
+        $team = Team::factory()
+            ->create();
+
+        Standing::factory()
+            ->home($team)
+            ->homeGoals(3)
+            ->awayGoals(2)
+            ->create();
+
+        $this->assertEquals(2, $team->goalsAgainst('home'));
+    }
+
+    /**
+     * @test
+     * @covers \App\Models\Team::goalsFor
+     */
+    public function calculates_goals_for_correctly()
+    {
+        $team = Team::factory()
+            ->create();
+
+        Standing::factory()
+            ->away($team)
+            ->homeGoals(2)
+            ->awayGoals(3)
+            ->create();
+
+        $this->assertEquals(3, $team->goalsFor('away'));
+    }
+
+    /**
+     * @test
+     * @covers \App\Models\Team::strength
      */
     public function team_strength_calculated_correctly()
     {
         $team = Team::factory()
             ->withWin(2)
             ->withDraw(1)
-            ->withLoss(0)
+            ->withLose(0)
             ->withGoalsFor(3)
             ->withGoalsAgainst(1)
             ->create();
 
+        Standing::factory(2)->home($team)->homeWins()->create();
+        Standing::factory(1)->away($team)->awayWins()->create();
+        Standing::factory(1)->home($team)->noGoals()->create();
+        Standing::factory(1)->away($team)->homeWins()->create();
+
+
         $this->assertEquals(
             $team->strength,
-            $team->win * config('league.rules.strength.win')
-            + $team->draw * config('league.rules.strength.draw')
-            + $team->loss * config('league.rules.strength.loss')
-            + $team->getGoalsFor('home') * config('league.rules.strength.goals.for.home')
-            + $team->getGoalsAgainst('home') * config('league.rules.strength.goals.against.home')
-            + $team->getGoalsFor('away') * config('league.rules.strength.goals.for.away')
-            + $team->getGoalsAgainst('away') * config('league.rules.strength.goals.against.away')
+            $team->points
+            + $team->goalsFor('home') * config('league.rules.strength.goals.for.home')
+            + $team->goalsAgainst('home') * config('league.rules.strength.goals.against.home')
+            + $team->goalsFor('away') * config('league.rules.strength.goals.for.away')
+            + $team->goalsAgainst('away') * config('league.rules.strength.goals.against.away')
         );
     }
 
