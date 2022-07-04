@@ -35,6 +35,21 @@ return [
             'draw' => 1,
             'loss' => 0,
         ],
+        'strength' => [
+            'win' => 1,
+            'draw' => 0.5,
+            'loss' => -1,
+            'goals' => [
+                'for' => [
+                    'away' => .75,
+                    'home' => .25,
+                ],
+                'against' => [
+                    'away' => -.25,
+                    'home' => -.75,
+                ],
+            ],
+        ],
     ],
 
 ];
