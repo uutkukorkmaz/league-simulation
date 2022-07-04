@@ -15,9 +15,14 @@ class TeamSeeder extends Seeder
      */
     public function run()
     {
-        $this->command->withProgressBar(count(config('league.teams')), function ($team) {
+        $stdout = $this->command->getOutput();
+        $teams = config('league.teams');
+        $stdout->progressStart(count($teams));
+        foreach ($teams as $team) {
             Team::create(['name' => $team]);
-        });
+            $stdout->progressAdvance();
+        }
+        $stdout->progressFinish();
     }
 
 }
