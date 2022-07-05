@@ -58,11 +58,14 @@ class Team extends Model
      */
     public function strength(): Attribute
     {
-        return new Attribute(get: fn() => $this->points
+        return new Attribute(get: fn() => max(
+            $this->points
             + $this->getMultipliedScoreByGoals('home', 'for')
             + $this->getMultipliedScoreByGoals('home', 'against')
             + $this->getMultipliedScoreByGoals('away', 'for')
-            + $this->getMultipliedScoreByGoals('away', 'against'));
+            + $this->getMultipliedScoreByGoals('away', 'against'),
+            0
+        ));
     }
 
     /**
