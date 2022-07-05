@@ -21,7 +21,6 @@ return new class extends Migration {
             $table->integer('drawn')->default(0);
             $table->integer('goals_for')->default(0);
             $table->integer('goals_against')->default(0);
-            $table->integer('points')->default(0);
             $table->timestamps();
         });
     }
