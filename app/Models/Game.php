@@ -19,6 +19,8 @@ class Game extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'home_team_id',
+        'away_team_id',
         'week',
         'home_goals',
         'away_goals',
