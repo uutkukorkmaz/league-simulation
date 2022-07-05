@@ -2,32 +2,23 @@
 
 
 return [
-    'name' => 'Premiere League',
+    'name' => 'Premiere League Simulation',
+    'morale_factor' => 0.1,
     'teams' => [
         'Arsenal',
         'Aston Villa',
-        'Bournemouth',
-        'Brentford',
-        'Brighton and Hove Albion',
         'Chelsea',
-        'Crystal Palace',
         'Everton',
-        'Fulham',
-        'Leeds United',
-        'Leicester City',
         'Liverpool',
         'Manchester City',
         'Manchester United',
         'Newcastle United',
-        'Nottingham Forest',
         'Southampton',
         'Tottenham Hotspur',
-        'West Ham United',
-        'Wolverhampton Wanderers',
     ],
 
     'fixture' => [
-        'rounds' => 2,
+        'allowRevenges' => true,
     ],
     'rules' => [
         'points' => [
@@ -36,17 +27,17 @@ return [
             'loss' => 0,
         ],
         'strength' => [
-            'win' => 1,
-            'draw' => 0.5,
-            'loss' => -1,
+            'win' => .75,
+            'draw' => .5,
+            'loss' => -.5,
             'goals' => [
                 'for' => [
-                    'away' => .75,
-                    'home' => .25,
+                    'away' => .25,
+                    'home' => .125,
                 ],
                 'against' => [
-                    'away' => -.25,
-                    'home' => -.75,
+                    'away' => -.075,
+                    'home' => -.125,
                 ],
             ],
         ],
