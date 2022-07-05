@@ -138,6 +138,7 @@ class TeamTest extends TestCase
     /**
      * @test
      * @covers \App\Models\Team::strength
+     * @covers \App\Models\Team::getMultipliedScoreByGoals
      */
     public function team_strength_calculated_correctly()
     {
