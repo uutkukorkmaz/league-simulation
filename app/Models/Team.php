@@ -123,6 +123,11 @@ class Team extends Model
         return new Attribute(get: fn() => $this->homeGames->merge($this->awayGames));
     }
 
+    public function played(): Attribute
+    {
+        return new Attribute(get: fn() => $this->games->filter(fn($game) => $game->is_played)->count());
+    }
+
     /**
      * The games that the team has played in.
      *
