@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LeagueController;
+use App\Http\Controllers\FixtureController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', LeagueController::class)->name('standings');
+
+Route::group(['prefix' => 'fixture', 'as' => 'fixture.'], function () {
+    Route::get('/', [FixtureController::class, 'index'])->name('index');
+    Route::delete('reset', [FixtureController::class, 'reset'])->name('reset');
+    Route::post('generate', [FixtureController::class, 'generate'])->name('generate');
 });
+Route::post('simulation', \App\Http\Controllers\SimulationController::class)->name('simulation');
