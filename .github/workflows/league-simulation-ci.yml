@@ -60,4 +60,4 @@ jobs:
           run: cat .env.testing
 
         - name: Test with Artisan
-          run: php artisan test --env=testing
+          run: php artisan test --env=testing --coverage
